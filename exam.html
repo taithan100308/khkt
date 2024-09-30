@@ -495,22 +495,31 @@
     }
 
     function toggleCircle(circle, questionNumber, option, position) {
-        const questionColumn = circle.closest('.question-column');
+        const container = circle.closest('.question-column') || circle.closest('.border');
         const wasSelected = circle.classList.contains('bg-black');
         
-        // Remove 'bg-black' class from all circles in the same vertical column
-        questionColumn.querySelectorAll(`.circle:nth-child(${position})`).forEach(c => c.classList.remove('bg-black'));
+        // Check if this is Phần II or Phần III
+        const isPhanII = container.closest('#phan2') !== null;
         
-        // Update the squares
-        const squares = questionColumn.querySelectorAll('.w-10.h-10');
-        
-        if (!wasSelected) {
-            // If it wasn't selected before, select it now and update the square
-            circle.classList.add('bg-black');
-            squares[position - 1].textContent = option;
+        if (isPhanII) {
+
+            circle.classList.toggle('bg-black');
         } else {
-            // If it was already selected, clear the square
-            squares[position - 1].textContent = '';
+
+            container.querySelectorAll(`.circle:nth-child(${position})`).forEach(c => c.classList.remove('bg-black'));
+            if (!wasSelected) {
+                circle.classList.add('bg-black');
+            }
+        }
+        
+
+        if (!isPhanII) {
+            const squares = container.querySelectorAll('.w-10.h-10');
+            if (!wasSelected) {
+                squares[position - 1].textContent = option;
+            } else {
+                squares[position - 1].textContent = '';
+            }
         }
     }
 
